@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from "next/link";
+import Navbar from '../../../components/navbar';
 
 interface Organiser {
   name: string;
@@ -579,26 +580,31 @@ function ActionButton({ data }: { data: HackathonData }) {
   }
 
   // Already registered - show team details
-  if (registrationStatus === 'yes' && teamDetails && userEmail) {
-    return (
-      <>
-        <button 
-          onClick={() => setShowTeamPopup(true)}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
-        >
-          View Team Details
+if (registrationStatus === 'yes' && teamDetails && userEmail) {
+  return (
+    <>
+      <button 
+        onClick={() => setShowTeamPopup(true)}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+      >
+        View Team Details
+      </button>
+      <Link href={`/arena/${hackCode}`}>
+        <button className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+          Go to Submission
         </button>
-        {showTeamPopup && (
-          <TeamDetailsPopup 
-            teamDetails={teamDetails} 
-            userEmail={userEmail}
-            onClose={() => setShowTeamPopup(false)}
-            onLeaveTeam={handleLeaveTeam}
-          />
-        )}
-      </>
-    );
-  }
+      </Link>
+      {showTeamPopup && (
+        <TeamDetailsPopup 
+          teamDetails={teamDetails} 
+          userEmail={userEmail}
+          onClose={() => setShowTeamPopup(false)}
+          onLeaveTeam={handleLeaveTeam}
+        />
+      )}
+    </>
+  );
+}
 
   // Can register
   if (canRegister && registrationStatus === 'no') {
@@ -695,6 +701,8 @@ export default function HackathonPage() {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Banner Image */}
@@ -939,5 +947,6 @@ export default function HackathonPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

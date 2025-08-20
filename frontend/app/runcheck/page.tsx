@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Navbar from '../../components/navbar';
 import { Instrument_Sans } from 'next/font/google';
+import { Suspense } from 'react';
 
 interface SimilarFile {
   file1: string;
@@ -111,7 +112,19 @@ const getConfidenceColor = (confidence: string): string => {
   }
 };
 
-export default function RunCheckPage() {
+export default function RunCheckContent() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    }>
+      <RunCheckPage />
+    </Suspense>
+  );
+}
+
+function RunCheckPage() {
   const [data, setData] = useState<PlagiarismData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -136,7 +149,7 @@ export default function RunCheckPage() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              //'auth_token': authToken,
+              'auth_token': authToken,
             },
             body: JSON.stringify({
               repository_url: repositoryUrl,
