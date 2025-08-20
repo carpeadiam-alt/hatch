@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LogOut, User } from 'lucide-react';
+import { Bricolage_Grotesque } from 'next/font/google';
+
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"], // choose weights you need
+});
 
 const Navbar = () => {
   const [userEmail, setUserEmail] = useState('');
@@ -18,9 +24,10 @@ const Navbar = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('auth_token');
     setUserEmail('');
+
     
     // Redirect to login page (uncomment when using Next.js router)
-    // window.location.href = '/login';
+    window.location.href = '/login';
   };
 
   return (

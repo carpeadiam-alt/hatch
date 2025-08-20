@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Instrument_Sans } from 'next/font/google';
+import Navbar from '../../components/navbar';
 
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
@@ -198,6 +199,8 @@ function CreateEventFormContent() {
 
   if (submissionResult) {
     return (
+      <>
+      <Navbar />
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -240,11 +243,15 @@ function CreateEventFormContent() {
           </div>
         </div>
       </div>
+      </>
     );
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gray-50 py-8">
+      <div className="text-gray-900 font-semibold text-center text-4xl mb-8">Create an Event</div>
       <div className="max-w-4xl mx-auto px-4">
         {/* Progress Bar */}
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
@@ -1238,5 +1245,6 @@ function CreateEventFormContent() {
         </div>
         </div>
     </div>
+    </>
     );
 }

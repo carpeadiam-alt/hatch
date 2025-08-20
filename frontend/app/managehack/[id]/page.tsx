@@ -98,12 +98,22 @@ interface HackathonData {
 type TabType = 'overview' | 'details' | 'phases' | 'admins' | 'announcements' | 'scoring';
 
 export default function ManageHackPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      router.push("/login"); // redirect to login page (adjust path if needed)
+    }
+  }, [router]);
+
   return (
     <div className={instrumentSans.className}>
       <ManageHackPageContent />
     </div>
   );
 }
+
 
 function ManageHackPageContent() {
   const params = useParams();

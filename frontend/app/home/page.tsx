@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Navbar from '../../components/navbar';
+import { Instrument_Sans } from 'next/font/google';
+import { useRouter } from 'next/navigation';
 
 interface Organiser {
   email: string;
@@ -91,6 +93,12 @@ interface Hackathon {
   }>;
 }
 
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-instrument-sans',
+});
+
 const LoadingSkeleton = () => (
   <div className="bg-white rounded-2xl border border-gray-100 p-6 animate-pulse">
     <div className="h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl mb-4"></div>
@@ -157,7 +165,7 @@ const HackathonCard = ({ hackathon, showRegisterButton = true }: { hackathon: Ha
   const isRegistrationOpen = calculateDaysLeft(hackathon.registrationEndDate) !== 'Registration Closed';
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 hover:border-[#008622]/20 hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+    <div className={`${instrumentSans.className} bg-white rounded-2xl border border-gray-300 hover:border-[#008622]/20 hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col`}>
       {/* Header Image */}
       <div className="relative h-40 overflow-hidden">
         {hackathon.imageUrl ? (
@@ -279,39 +287,30 @@ const HackathonCard = ({ hackathon, showRegisterButton = true }: { hackathon: Ha
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Link>
-
-          {/* Registration Button */}
-          {showRegisterButton && isRegistrationOpen && (
-            <Link
-              href={`registerhack/${hackathon.hackCode}`}
-              className="inline-flex items-center justify-center px-4 py-3 bg-[#008622] text-white font-semibold rounded-lg hover:bg-[#007020] transition-all duration-200 transform hover:scale-[1.02] shadow-md hover:shadow-lg text-sm"
-            >
-              Register Now
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            </Link>
-          )}
-
-          {/* Registration Closed Button */}
-          {showRegisterButton && !isRegistrationOpen && (
-            <button
-              disabled
-              className="inline-flex items-center justify-center px-4 py-3 bg-gray-300 text-gray-500 font-semibold rounded-lg cursor-not-allowed text-sm"
-            >
-              Registration Closed
-              <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </button>
-          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default function HomePage() {
+export default function HomePageContent() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (!token) {
+      router.push("/login"); // redirect to login page (adjust path if needed)
+    }
+  }, [router]);
+
+  return (
+    <div className={instrumentSans.className}>
+      <HomePage />
+    </div>
+  );
+}
+
+function HomePage() {
   const [allHackathons, setAllHackathons] = useState<Hackathon[]>([]);
   const [filteredHackathons, setFilteredHackathons] = useState<Hackathon[]>([]);
   const [registeredHackathons, setRegisteredHackathons] = useState<Hackathon[]>([]);
@@ -496,10 +495,12 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <div className={`${instrumentSans.className} min-h-screen bg-gradient-to-br from-gray-50 to-white`}>
         {/* Hero Section */}
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
+          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#008622]/5 to-[#00b82e]/5"></div>
+
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
             <div className="text-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
@@ -508,7 +509,7 @@ export default function HomePage() {
                   Innovate.
                 </span>
               </h1>
-              <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              <p className="text-xl sm:text-2xl text-gray-900 mb-8 font-medium max-w-3xl mx-auto">
                 Join the most exciting hackathons and turn your ideas into reality. Connect with innovators, learn new skills, and compete for amazing prizes.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -532,23 +533,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* Your Registered Hackathons Section */}
-          <section className="mb-16">
+          <section className="mb-32">
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-gray-900">Your Registered Hackathons</h2>
                 <p className="text-gray-600 mt-2">Track your upcoming competitions and deadlines</p>
               </div>
-              <Link
-                href="/dashboard/registered"
-                className="text-[#008622] hover:text-[#007020] font-medium flex items-center"
-              >
-                View All
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -574,15 +567,6 @@ export default function HomePage() {
                 <h2 className="text-3xl font-bold text-gray-900">Your Organized Hackathons</h2>
                 <p className="text-gray-600 mt-2">Manage and monitor your events</p>
               </div>
-              <Link
-                href="/dashboard/organized"
-                className="text-[#008622] hover:text-[#007020] font-medium flex items-center"
-              >
-                View All
-                <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </Link>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -609,15 +593,6 @@ export default function HomePage() {
                   <h2 className="text-3xl font-bold text-gray-900">Discover Hackathons</h2>
                   <p className="text-gray-600 mt-2">Find your next coding adventure</p>
                 </div>
-                <Link
-                  href="/hackathons"
-                  className="text-[#008622] hover:text-[#007020] font-medium flex items-center"
-                >
-                  View All
-                  <svg className="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </Link>
               </div>
 
               {/* Compact Search and Filter Section */}

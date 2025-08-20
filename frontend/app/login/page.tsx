@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Instrument_Sans } from 'next/font/google';
-
-const instrumentSans = Instrument_Sans({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-instrument-sans',
-});
+import { Bricolage_Grotesque } from "next/font/google";
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -31,6 +26,17 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const API_BASE_URL = 'https://hatchplatform-dcdphngyewcwcuc4.centralindia-01.azurewebsites.net';
+
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"], // choose weights you need
+});
+
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-instrument-sans',
+});
 
 function AuthPage() {
   return (
@@ -224,7 +230,7 @@ function AuthPageContent() {
             />
           </div>
           
-          <h1 className="text-[70px] font-normal text-green-600 mb-6">Hatch</h1>
+          <h1 className={`${bricolage.className} text-[70px] font-medium text-green-600 mb-6`}>Hatch</h1>
 
         </div>
 
