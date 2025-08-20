@@ -129,6 +129,7 @@ function ManageHackPageContent() {
   const [activeLeaderboardPhase, setActiveLeaderboardPhase] = useState<string>('overall');
   const [eliminationCount, setEliminationCount] = useState<string>('');
   const [eliminating, setEliminating] = useState(false);
+  const [publishing, setPublishing] = useState(false);
 
   // In-memory auth token storage (replace with your actual auth mechanism)
   const [authToken, setAuthToken] = useState<string>('');
@@ -461,6 +462,91 @@ function ManageHackPageContent() {
       alert(err instanceof Error ? err.message : 'Failed to eliminate teams');
     } finally {
       setEliminating(false);
+    }
+  };
+
+  // Function to handle publishing results
+  const handlePublishResults = async () => {
+    const leaderboardData = getOverallLeaderboardData();
+    
+    if (leaderboardData.length === 0) {
+      alert('No teams with scores to publish');
+      return;
+    }
+
+    const confirmMessage = `This will publish the overall leaderboard with ${leaderboardData.length} teams. This action will make the leaderboard public and send certificates to all participants. Are you sure you want to continue?`;
+    
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      setPublishing(true);
+      const token = getAuthToken();
+
+      // Prepare the leaderboard JSON data
+      const leaderboardJson = leaderboardData.map((team, index) => ({
+        rank: index + 1,
+        teamId: team.teamId,
+        teamName: team.teamName,
+        totalScore: team.score,
+        memberCount: team.memberCount,
+        phaseScores: team.submissions?.map(sub => ({
+          phaseId: sub.phaseId,
+          phaseName: hackData?.phases[sub.phaseId]?.name || `Phase ${sub.phaseId + 1}`,
+          score: sub.score || 0
+        })) || []
+      }));
+
+      const fullResultsData = {
+        hackCode,
+        eventName: hackData?.eventName,
+        publishedAt: new Date().toISOString(),
+        totalTeams: leaderboardData.length,
+        leaderboard: leaderboardJson
+      };
+
+      // Download JSON file locally
+      const downloadJson = () => {
+        const dataStr = JSON.stringify(fullResultsData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `${hackCode}_results_${new Date().toISOString().split('T')[0]}.json`;
+        
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      };
+
+      console.log('Publishing results:', fullResultsData);
+
+      // Send to API
+      const response = await fetch(`${BASE_URL}/publishresults?hackCode=${encodeURIComponent(hackCode)}`, {
+        method: 'POST',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fullResultsData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Publish results error response:', errorText);
+        throw new Error(`Failed to publish results: ${response.status} ${response.statusText}`);
+      }
+
+      // Download the JSON file
+      downloadJson();
+
+      alert('Results published successfully! The leaderboard is now public, certificates are being sent to participants, and the results JSON has been downloaded.');
+
+    } catch (err) {
+      console.error('Error publishing results:', err);
+      alert(err instanceof Error ? err.message : 'Failed to publish results');
+    } finally {
+      setPublishing(false);
     }
   };
 
@@ -974,6 +1060,41 @@ function ManageHackPageContent() {
                 ))}
               </nav>
             </div>
+
+            {/* Publish Results button - Only show on Overall tab */}
+            {activeLeaderboardPhase === 'overall' && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium text-green-800 mb-1">Publish Final Results</h3>
+                    <p className="text-sm text-green-700">
+                      Make the overall leaderboard public and send certificates to all participants
+                    </p>
+                  </div>
+                  <button
+                    onClick={handlePublishResults}
+                    disabled={publishing || getOverallLeaderboardData().length === 0}
+                    className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors flex items-center gap-2"
+                  >
+                    {publishing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        Publishing...
+                      </>
+                    ) : (
+                      <>
+                        🏆 Publish Results
+                      </>
+                    )}
+                  </button>
+                </div>
+                {getOverallLeaderboardData().length === 0 && (
+                  <p className="text-xs text-green-600 mt-2">
+                    ⚠️ No teams with scores available to publish
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Elimination controls - Only show for phase tabs, not overall */}
             {activeLeaderboardPhase !== 'overall' && (

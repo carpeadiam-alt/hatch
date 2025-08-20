@@ -39,6 +39,30 @@ interface Announcement {
   createdBy: string | null;
 }
 
+interface PhaseScore {
+  phaseId: number;
+  phaseName: string;
+  score: number;
+}
+
+interface LeaderboardEntry {
+  rank: number;
+  teamId: string;
+  teamName: string;
+  memberCount: number;
+  totalScore: number;
+  phaseScores: PhaseScore[];
+}
+
+interface Results {
+  eventName: string;
+  hackCode: string;
+  leaderboard: LeaderboardEntry[];
+  publishedAt: string;
+  publishedBy: string;
+  totalTeams: number;
+}
+
 interface HackathonData {
   admins: string[];
   eventDescription: string;
@@ -61,6 +85,7 @@ interface HackathonData {
   imageUrl?: string;
   announcements?: Announcement[];
   registrations?: any[];
+  results?: Results;
 }
 
 interface HackathonStatus {
@@ -87,6 +112,105 @@ interface TeamDetails {
   teamLeader: TeamMember;
   teamMembers: TeamMember[];
   teamName: string;
+}
+
+// Leaderboard Component
+function LeaderboardSection({ results }: { results: Results }) {
+  const getRankBadgeColor = (rank: number) => {
+    switch (rank) {
+      case 1: return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+      case 2: return 'bg-gray-100 text-gray-800 border-gray-300';
+      case 3: return 'bg-orange-100 text-orange-800 border-orange-300';
+      default: return 'bg-blue-100 text-blue-800 border-blue-300';
+    }
+  };
+
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
+      case 1: return '🥇';
+      case 2: return '🥈';
+      case 3: return '🥉';
+      default: return `#${rank}`;
+    }
+  };
+
+  const formatPublishedDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold text-gray-900">🏆 Leaderboard</h2>
+        <div className="text-sm text-gray-600">
+          <div>Published: {formatPublishedDate(results.publishedAt)}</div>
+          <div>Total Teams: {results.totalTeams}</div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {results.leaderboard.map((team, index) => (
+          <div
+            key={team.teamId}
+            className={`border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
+              team.rank <= 3 ? 'border-2 border-opacity-50' : 'border-gray-200'
+            } ${
+              team.rank === 1 ? 'bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-300' :
+              team.rank === 2 ? 'bg-gradient-to-r from-gray-50 to-slate-50 border-gray-300' :
+              team.rank === 3 ? 'bg-gradient-to-r from-orange-50 to-red-50 border-orange-300' :
+              'bg-white'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center font-bold ${getRankBadgeColor(team.rank)}`}>
+                  {team.rank <= 3 ? getRankIcon(team.rank) : team.rank}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{team.teamName}</h3>
+                  <p className="text-sm text-gray-600">{team.memberCount} member{team.memberCount !== 1 ? 's' : ''}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-gray-900">{team.totalScore}</div>
+                <div className="text-sm text-gray-600">points</div>
+              </div>
+            </div>
+
+            {/* Phase Breakdown */}
+            <div className="mt-3">
+              <h4 className="text-sm font-medium text-gray-700 mb-2">Phase Scores:</h4>
+              <div className="flex flex-wrap gap-2">
+                {team.phaseScores.map((phase) => (
+                  <div
+                    key={phase.phaseId}
+                    className="px-3 py-1 bg-gray-100 rounded-full text-sm"
+                  >
+                    <span className="font-medium">{phase.phaseName}:</span>{' '}
+                    <span className="text-gray-900 font-semibold">{phase.score}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {results.publishedBy && (
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <p className="text-sm text-gray-600">
+            Results published by: <span className="font-medium">{results.publishedBy}</span>
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Status calculation component
@@ -621,6 +745,11 @@ export default function HackathonPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Leaderboard Section - Only show if results are available */}
+            {hackData.results && (
+              <LeaderboardSection results={hackData.results} />
+            )}
+
             {/* Announcements */}
             {hackData.announcements && hackData.announcements.filter(announcement => {
               const now = new Date();

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
+
 const BASE_URL = 'https://hatchplatform-dcdphngyewcwcuc4.centralindia-01.azurewebsites.net';
 
 interface Announcement {
