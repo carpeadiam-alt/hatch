@@ -1,8 +1,10 @@
+"use client"
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowRight, FiCode, FiUsers, FiZap } from "react-icons/fi";
+import { FiArrowRight, FiCode, FiUsers, FiZap, FiX, FiPlay } from "react-icons/fi";
 import { Instrument_Sans } from 'next/font/google';
 import { Bricolage_Grotesque } from "next/font/google";
+import { useState } from 'react';
 
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
@@ -24,8 +26,42 @@ export default function HomePage() {
 }
 
 function Home() {
+  const [showPopup, setShowPopup] = useState(true);
+
+  const scrollToDemo = () => {
+    document.getElementById('demo-video')?.scrollIntoView({ behavior: 'smooth' });
+    setShowPopup(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white relative">
+      {/* Floating Popup */}
+      {showPopup && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg border border-green-500 max-w-sm w-full mx-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <FiPlay className="h-5 w-5" />
+              <span className="text-sm font-medium">Watch our demo video below!</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={scrollToDemo}
+                className="text-xs bg-white text-green-600 px-2 py-1 rounded hover:bg-green-50 transition-colors"
+              >
+                Watch
+              </button>
+              <button
+                onClick={() => setShowPopup(false)}
+                className="text-white hover:text-green-200 transition-colors"
+                aria-label="Close popup"
+              >
+                <FiX className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <nav className={`${bricolage.className} bg-white shadow-sm`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,6 +118,36 @@ function Home() {
             className="object-contain max-h-full"
             priority
           />
+        </div>
+      </div>
+
+      {/* Demo Video Section */}
+      <div id="demo-video" className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:text-center mb-12">
+            <h2 className="text-base text-green-600 font-semibold tracking-wide uppercase">Demo Video</h2>
+            <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              See Hatch in Action
+            </p>
+            <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+              Watch how easy it is to create and manage hackathons with our platform
+            </p>
+          </div>
+          
+          <div className="flex justify-center">
+            <div className="w-full max-w-4xl">
+              <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl">
+                <iframe
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/-1XlrsfiRFg"
+                  title="Hatch Platform Demo"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
