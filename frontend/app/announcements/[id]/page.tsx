@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-
+import Navbar from '../../../components/navbar';
 
 const BASE_URL = 'https://hatchplatform-dcdphngyewcwcuc4.centralindia-01.azurewebsites.net';
 
@@ -178,6 +178,8 @@ export default function AdminAnnouncementsPage() {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -296,5 +298,6 @@ export default function AdminAnnouncementsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

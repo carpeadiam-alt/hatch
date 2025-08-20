@@ -188,6 +188,7 @@ function CreateEventFormContent() {
       const result: ApiResponse = await response.json();
       setSubmissionResult(result);
       console.log('Event created successfully:', result);
+      window.location.href="/home";
       
     } catch (error) {
       console.error('Error creating event:', error);

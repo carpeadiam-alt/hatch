@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Instrument_Sans } from 'next/font/google';
+import Navbar from '../../../components/navbar';
 
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
@@ -659,7 +660,7 @@ function ManageHackPageContent() {
           <p>Error: {error}</p>
           <button
             onClick={fetchHackathonData}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="mt-4 bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700"
           >
             Retry
           </button>
@@ -677,12 +678,14 @@ function ManageHackPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-white">Manage Hackathon: {hackData.eventName}</h1>
+  <>
+    <Navbar />
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-6xl bg-white mx-auto">
+        <h1 className="text-3xl font-bold py-6 mx-6  mb-6 text-black">Manage Hackathon: {hackData.eventName}</h1>
 
         {/* Tab Navigation */}
-        <div className="border-b border-gray-800 mb-6">
+        <div className="border-b border-gray-800 mx-6 mb-6">
           <nav className="flex space-x-8">
             {[
               { id: 'overview', label: 'Overview' },
@@ -698,7 +701,7 @@ function ManageHackPageContent() {
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.id
                     ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-600'
+                    : 'border-transparent text-gray-900 hover:text-gray-1000 hover:border-gray-600'
                 }`}
               >
                 {tab.label}
@@ -709,46 +712,46 @@ function ManageHackPageContent() {
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
-          <div className="bg-gray-900 rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Hackathon Overview</h2>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-semibold mb-4 text-black">Hackathon Overview</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-medium mb-2 text-white">Basic Information</h3>
-                <p className="text-gray-300"><strong className="text-white">Event Name:</strong> {hackData.eventName}</p>
-                <p className="text-gray-300"><strong className="text-white">Tagline:</strong> {hackData.eventTagline}</p>
-                <p className="text-gray-300"><strong className="text-white">Type:</strong> {hackData.eventType}</p>
-                <p className="text-gray-300"><strong className="text-white">Mode:</strong> {hackData.mode}</p>
-                <p className="text-gray-300"><strong className="text-white">Team Size:</strong> {hackData.teamSize}</p>
-                <p className="text-gray-300"><strong className="text-white">Max Teams:</strong> {hackData.maxTeams}</p>
-                <p className="text-gray-300"><strong className="text-white">Hack Code:</strong> {hackData.hackCode}</p>
+                <h3 className="text-lg font-medium mb-2 text-black">Basic Information</h3>
+                <p className="text-gray-600"><strong className="text-black">Event Name:</strong> {hackData.eventName}</p>
+                <p className="text-gray-600"><strong className="text-black">Tagline:</strong> {hackData.eventTagline}</p>
+                <p className="text-gray-600"><strong className="text-black">Type:</strong> {hackData.eventType}</p>
+                <p className="text-gray-600"><strong className="text-black">Mode:</strong> {hackData.mode}</p>
+                <p className="text-gray-600"><strong className="text-black">Team Size:</strong> {hackData.teamSize}</p>
+                <p className="text-gray-600"><strong className="text-black">Max Teams:</strong> {hackData.maxTeams}</p>
+                <p className="text-gray-600"><strong className="text-black">Hack Code:</strong> {hackData.hackCode}</p>
               </div>
 
               <div>
-                <h3 className="text-lg font-medium mb-2 text-white">Dates</h3>
-                <p className="text-gray-300"><strong className="text-white">Event Start:</strong> {formatDate(hackData.eventStartDate)}</p>
-                <p className="text-gray-300"><strong className="text-white">Event End:</strong> {formatDate(hackData.eventEndDate)}</p>
-                <p className="text-gray-300"><strong className="text-white">Registration Start:</strong> {formatDate(hackData.registrationStartDate)}</p>
-                <p className="text-gray-300"><strong className="text-white">Registration End:</strong> {formatDate(hackData.registrationEndDate)}</p>
+                <h3 className="text-lg font-medium mb-2 text-black">Dates</h3>
+                <p className="text-gray-600"><strong className="text-black">Event Start:</strong> {formatDate(hackData.eventStartDate)}</p>
+                <p className="text-gray-600"><strong className="text-black">Event End:</strong> {formatDate(hackData.eventEndDate)}</p>
+                <p className="text-gray-600"><strong className="text-black">Registration Start:</strong> {formatDate(hackData.registrationStartDate)}</p>
+                <p className="text-gray-600"><strong className="text-black">Registration End:</strong> {formatDate(hackData.registrationEndDate)}</p>
               </div>
             </div>
 
             <div className="mt-6">
-              <h3 className="text-lg font-medium mb-2 text-white">Description</h3>
-              <p className="text-gray-300">{hackData.eventDescription}</p>
+              <h3 className="text-lg font-medium mb-2 text-black">Description</h3>
+              <p className="text-gray-600">{hackData.eventDescription}</p>
             </div>
 
             {hackData.hasFee && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium mb-2 text-white">Fee Information</h3>
-                <p className="text-gray-300"><strong className="text-white">Fee:</strong> ₹{hackData.fee}</p>
-                <p className="text-gray-300"><strong className="text-white">UPI ID:</strong> {hackData.upiId}</p>
+                <h3 className="text-lg font-medium mb-2 text-black">Fee Information</h3>
+                <p className="text-gray-600"><strong className="text-black">Fee:</strong> ₹{hackData.fee}</p>
+                <p className="text-gray-600"><strong className="text-black">UPI ID:</strong> {hackData.upiId}</p>
               </div>
             )}
 
             {hackData.sponsors && hackData.sponsors.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium mb-2 text-white">Sponsors</h3>
+                <h3 className="text-lg font-medium mb-2 text-black">Sponsors</h3>
                 <div className="flex flex-wrap gap-2">
                   {hackData.sponsors.map((sponsor, index) => (
                     <span key={index} className="bg-blue-900 text-blue-300 px-3 py-1 rounded-full text-sm">
@@ -761,10 +764,10 @@ function ManageHackPageContent() {
 
             {hackData.prizes && hackData.prizes.length > 0 && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium mb-2 text-white">Prizes</h3>
+                <h3 className="text-lg font-medium mb-2 text-black">Prizes</h3>
                 {hackData.prizes.map((prize, index) => (
-                  <div key={index} className="mb-2 text-gray-300">
-                    <strong className="text-white">{prize.title}:</strong> {prize.description}
+                  <div key={index} className="mb-2 text-gray-600">
+                    <strong className="text-black">{prize.title}:</strong> {prize.description}
                   </div>
                 ))}
               </div>
@@ -772,22 +775,22 @@ function ManageHackPageContent() {
 
             {hackData.registrations && (
               <div className="mt-6">
-                <h3 className="text-lg font-medium mb-2 text-white">Registration Stats</h3>
-                <p className="text-gray-300"><strong className="text-white">Registered Teams:</strong> {hackData.registrations.length}</p>
-                <p className="text-gray-300"><strong className="text-white">Max Teams:</strong> {hackData.maxTeams}</p>
+                <h3 className="text-lg font-medium mb-2 text-black">Registration Stats</h3>
+                <p className="text-gray-600"><strong className="text-black">Registered Teams:</strong> {hackData.registrations.length}</p>
+                <p className="text-gray-600"><strong className="text-black">Max Teams:</strong> {hackData.maxTeams}</p>
               </div>
             )}
           </div>
         )}
 
         {activeTab === 'details' && (
-          <div className="bg-gray-900 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-white">Edit Details</h2>
+              <h2 className="text-2xl font-semibold text-black">Edit Details</h2>
               <button
                 onClick={saveChanges}
                 disabled={saving}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                className="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -795,71 +798,71 @@ function ManageHackPageContent() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Event Name</label>
+                <label className="block text-sm font-medium mb-1 text-black">Event Name</label>
                 <input
                   type="text"
                   value={editedData.eventName || ''}
                   onChange={(e) => handleInputChange('eventName', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Event Tagline</label>
+                <label className="block text-sm font-medium mb-1 text-black">Event Tagline</label>
                 <input
                   type="text"
                   value={editedData.eventTagline || ''}
                   onChange={(e) => handleInputChange('eventTagline', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Event Start Date</label>
+                <label className="block text-sm font-medium mb-1 text-black">Event Start Date</label>
                 <input
                   type="datetime-local"
                   value={editedData.eventStartDate || ''}
                   onChange={(e) => handleInputChange('eventStartDate', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Event End Date</label>
+                <label className="block text-sm font-medium mb-1 text-black">Event End Date</label>
                 <input
                   type="datetime-local"
                   value={editedData.eventEndDate || ''}
                   onChange={(e) => handleInputChange('eventEndDate', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Registration Start Date</label>
+                <label className="block text-sm font-medium mb-1 text-black">Registration Start Date</label>
                 <input
                   type="datetime-local"
                   value={editedData.registrationStartDate || ''}
                   onChange={(e) => handleInputChange('registrationStartDate', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Registration End Date</label>
+                <label className="block text-sm font-medium mb-1 text-black">Registration End Date</label>
                 <input
                   type="datetime-local"
                   value={editedData.registrationEndDate || ''}
                   onChange={(e) => handleInputChange('registrationEndDate', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Mode</label>
+                <label className="block text-sm font-medium mb-1 text-black">Mode</label>
                 <select
                   value={editedData.mode || ''}
                   onChange={(e) => handleInputChange('mode', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 >
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
@@ -868,31 +871,31 @@ function ManageHackPageContent() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Team Size</label>
+                <label className="block text-sm font-medium mb-1 text-black">Team Size</label>
                 <input
                   type="number"
                   value={editedData.teamSize || ''}
                   onChange={(e) => handleInputChange('teamSize', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Max Teams</label>
+                <label className="block text-sm font-medium mb-1 text-black">Max Teams</label>
                 <input
                   type="number"
                   value={editedData.maxTeams || ''}
                   onChange={(e) => handleInputChange('maxTeams', e.target.value)}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-white">Has Fee</label>
+                <label className="block text-sm font-medium mb-1 text-black">Has Fee</label>
                 <select
                   value={editedData.hasFee ? 'true' : 'false'}
                   onChange={(e) => handleInputChange('hasFee', e.target.value === 'true')}
-                  className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 >
                   <option value="false">No</option>
                   <option value="true">Yes</option>
@@ -902,22 +905,22 @@ function ManageHackPageContent() {
               {editedData.hasFee && (
                 <>
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-white">Fee Amount</label>
+                    <label className="block text-sm font-medium mb-1 text-black">Fee Amount</label>
                     <input
                       type="text"
                       value={editedData.fee || ''}
                       onChange={(e) => handleInputChange('fee', e.target.value)}
-                      className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                      className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1 text-white">UPI ID</label>
+                    <label className="block text-sm font-medium mb-1 text-black">UPI ID</label>
                     <input
                       type="text"
                       value={editedData.upiId || ''}
                       onChange={(e) => handleInputChange('upiId', e.target.value)}
-                      className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                      className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                     />
                   </div>
                 </>
@@ -925,32 +928,32 @@ function ManageHackPageContent() {
             </div>
 
             <div className="mt-6">
-              <label className="block text-sm font-medium mb-1 text-white">Event Description</label>
+              <label className="block text-sm font-medium mb-1 text-black">Event Description</label>
               <textarea
                 value={editedData.eventDescription || ''}
                 onChange={(e) => handleInputChange('eventDescription', e.target.value)}
                 rows={4}
-                className="w-full border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
               />
             </div>
           </div>
         )}
 
         {activeTab === 'phases' && (
-          <div className="bg-gray-900 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-white">Manage Phases</h2>
+              <h2 className="text-2xl font-semibold text-black">Manage Phases</h2>
               <div className="flex gap-2">
                 <button
                   onClick={addPhase}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  className="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700"
                 >
                   Add Phase
                 </button>
                 <button
                   onClick={saveChanges}
                   disabled={saving}
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                  className="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   {saving ? 'Saving...' : 'Save Changes'}
                 </button>
@@ -960,12 +963,12 @@ function ManageHackPageContent() {
             {editedData.phases && editedData.phases.length > 0 ? (
               <div className="space-y-6">
                 {editedData.phases.map((phase, phaseIndex) => (
-                  <div key={phaseIndex} className="border border-gray-700 bg-gray-800 rounded-lg p-4">
+                  <div key={phaseIndex} className="border border-gray-700 bg-gray-50 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-medium text-white">Phase {phaseIndex + 1}</h3>
+                      <h3 className="text-lg font-medium text-black">Phase {phaseIndex + 1}</h3>
                       <button
                         onClick={() => removePhase(phaseIndex)}
-                        className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                        className="bg-red-600 text-black px-3 py-1 rounded text-sm hover:bg-red-700"
                       >
                         Remove Phase
                       </button>
@@ -973,44 +976,44 @@ function ManageHackPageContent() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-white">Phase Name</label>
+                        <label className="block text-sm font-medium mb-1 text-black">Phase Name</label>
                         <input
                           type="text"
                           value={phase.name}
                           onChange={(e) => updatePhase(phaseIndex, 'name', e.target.value)}
-                          className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                          className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                           placeholder="e.g., Ideation Phase"
                         />
                       </div>
 
                       <div className="md:col-span-1">
-                        <label className="block text-sm font-medium mb-1 text-white">Description</label>
+                        <label className="block text-sm font-medium mb-1 text-black">Description</label>
                         <textarea
                           value={phase.description}
                           onChange={(e) => updatePhase(phaseIndex, 'description', e.target.value)}
                           rows={2}
-                          className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                          className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                           placeholder="Phase description"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-white">Start Date</label>
+                        <label className="block text-sm font-medium mb-1 text-black">Start Date</label>
                         <input
                           type="datetime-local"
                           value={phase.startDate}
                           onChange={(e) => updatePhase(phaseIndex, 'startDate', e.target.value)}
-                          className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                          className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium mb-1 text-white">End Date</label>
+                        <label className="block text-sm font-medium mb-1 text-black">End Date</label>
                         <input
                           type="datetime-local"
                           value={phase.endDate}
                           onChange={(e) => updatePhase(phaseIndex, 'endDate', e.target.value)}
-                          className="w-full border border-gray-600 bg-gray-700 text-white rounded px-3 py-2"
+                          className="w-full border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                         />
                       </div>
                     </div>
@@ -1018,10 +1021,10 @@ function ManageHackPageContent() {
                     {/* Deliverables Section */}
                     <div className="mt-4">
                       <div className="flex justify-between items-center mb-2">
-                        <h4 className="text-md font-medium text-white">Deliverables</h4>
+                        <h4 className="text-md font-medium text-black">Deliverables</h4>
                         <button
                           onClick={() => addDeliverable(phaseIndex)}
-                          className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
+                          className="bg-blue-600 text-black px-3 py-1 rounded text-sm hover:bg-blue-700"
                         >
                           Add Deliverable
                         </button>
@@ -1030,14 +1033,14 @@ function ManageHackPageContent() {
                       {phase.deliverables.length > 0 ? (
                         <div className="space-y-2">
                           {phase.deliverables.map((deliverable, deliverableIndex) => (
-                            <div key={deliverableIndex} className="bg-gray-700 p-3 rounded border border-gray-600">
+                            <div key={deliverableIndex} className="bg-gray-50 p-3 rounded border border-gray-600">
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-end">
                                 <div>
-                                  <label className="block text-xs font-medium mb-1 text-white">Type</label>
+                                  <label className="block text-xs font-medium mb-1 text-black">Type</label>
                                   <select
                                     value={deliverable.type}
                                     onChange={(e) => updateDeliverable(phaseIndex, deliverableIndex, 'type', e.target.value)}
-                                    className="w-full border border-gray-600 bg-gray-800 text-white rounded px-2 py-1 text-sm"
+                                    className="w-full border border-gray-600 bg-gray-50 text-black rounded px-2 py-1 text-sm"
                                   >
                                     <option value="github">GitHub</option>
                                     <option value="canva">Canva</option>
@@ -1051,12 +1054,12 @@ function ManageHackPageContent() {
                                 </div>
 
                                 <div>
-                                  <label className="block text-xs font-medium mb-1 text-white">Description</label>
+                                  <label className="block text-xs font-medium mb-1 text-black">Description</label>
                                   <input
                                     type="text"
                                     value={deliverable.description}
                                     onChange={(e) => updateDeliverable(phaseIndex, deliverableIndex, 'description', e.target.value)}
-                                    className="w-full border border-gray-600 bg-gray-800 text-white rounded px-2 py-1 text-sm"
+                                    className="w-full border border-gray-600 bg-gray-50 text-black rounded px-2 py-1 text-sm"
                                     placeholder="Deliverable description"
                                   />
                                 </div>
@@ -1064,7 +1067,7 @@ function ManageHackPageContent() {
                                 <div className="flex justify-end">
                                   <button
                                     onClick={() => removeDeliverable(phaseIndex, deliverableIndex)}
-                                    className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                                    className="bg-red-500 text-black px-2 py-1 rounded text-xs hover:bg-red-600"
                                   >
                                     Remove
                                   </button>
@@ -1085,7 +1088,7 @@ function ManageHackPageContent() {
                 <p className="text-gray-400 mb-4">No phases defined yet</p>
                 <button
                   onClick={addPhase}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                  className="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700"
                 >
                   Add First Phase
                 </button>
@@ -1095,23 +1098,23 @@ function ManageHackPageContent() {
         )}
 
         {activeTab === 'admins' && (
-          <div className="bg-gray-900 rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-white">Manage Admins</h2>
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-semibold mb-4 text-black">Manage Admins</h2>
 
             <div className="mb-6">
-              <h3 className="text-lg font-medium mb-2 text-white">Add New Admin</h3>
+              <h3 className="text-lg font-medium mb-2 text-black">Add New Admin</h3>
               <div className="flex gap-2">
                 <input
                   type="email"
                   placeholder="Enter admin email"
                   value={newAdminEmail}
                   onChange={(e) => setNewAdminEmail(e.target.value)}
-                  className="flex-1 border border-gray-600 bg-gray-800 text-white rounded px-3 py-2"
+                  className="flex-1 border border-gray-600 bg-gray-50 text-black rounded px-3 py-2"
                 />
                 <button
                   onClick={addAdmin}
                   disabled={adminLoading}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                  className="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
                 >
                   {adminLoading ? 'Adding...' : 'Add Admin'}
                 </button>
@@ -1119,18 +1122,18 @@ function ManageHackPageContent() {
             </div>
 
             <div>
-              <h3 className="text-lg font-medium mb-2 text-white">Current Admins</h3>
+              <h3 className="text-lg font-medium mb-2 text-black">Current Admins</h3>
               {hackData.admins.length === 0 ? (
                 <p className="text-gray-400">No admins found</p>
               ) : (
                 <div className="space-y-2">
                   {hackData.admins.map((admin, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-800 p-3 rounded">
-                      <span className="text-white">{admin}</span>
+                    <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                      <span className="text-black">{admin}</span>
                       <button
                         onClick={() => removeAdmin(admin)}
                         disabled={hackData.admins.length <= 1}
-                        className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-red-600 text-black px-3 py-1 rounded text-sm hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Remove
                       </button>
@@ -1148,5 +1151,6 @@ function ManageHackPageContent() {
         )}
       </div>
     </div>
+    </>
   );
 }

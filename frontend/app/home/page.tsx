@@ -464,7 +464,7 @@ function HomePage() {
     }
   };
 
-  if (loading && error) {
+  if (error && !loading) {
     return (
       <>
         <Navbar />
@@ -493,9 +493,9 @@ function HomePage() {
   }
 
   return (
-    <>
+    <div className={instrumentSans.className}>
       <Navbar />
-      <div className={`${instrumentSans.className} min-h-screen bg-gradient-to-br from-gray-50 to-white`}>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
           {/* Gradient overlay */}
@@ -514,7 +514,7 @@ function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/hackathons"
+                  href="#"
                   className="inline-flex items-center px-8 py-4 bg-[#008622] text-white font-semibold rounded-xl hover:bg-[#007020] transition-all duration-200 transform hover:scale-105 shadow-lg"
                 >
                   Explore Hackathons
@@ -533,60 +533,10 @@ function HomePage() {
           </div>
         </div>
 
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Your Registered Hackathons Section */}
-          <section className="mb-32">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900">Your Registered Hackathons</h2>
-                <p className="text-gray-600 mt-2">Track your upcoming competitions and deadlines</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {loading ? (
-                Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
-              ) : registeredHackathons.length > 0 ? (
-                registeredHackathons.slice(0, 3).map((hackathon) => (
-                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
-                ))
-              ) : (
-                <EmptyState
-                  title="No Registered Hackathons"
-                  message="You haven't registered for any hackathons yet. Explore available hackathons below!"
-                />
-              )}
-            </div>
-          </section>
-
-          {/* Your Organized Hackathons Section */}
-          <section className="mb-16">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900">Your Organized Hackathons</h2>
-                <p className="text-gray-600 mt-2">Manage and monitor your events</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {loading ? (
-                Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
-              ) : organizedHackathons.length > 0 ? (
-                organizedHackathons.slice(0, 3).map((hackathon) => (
-                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
-                ))
-              ) : (
-                <EmptyState
-                  title="No Organized Hackathons"
-                  message="You haven't organized any hackathons yet. Ready to create your first event?"
-                />
-              )}
-            </div>
-          </section>
-
+        {/* Main Content Container */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Discover Hackathons Section */}
-          <section>
+          <section className="mb-16">
             <div className="flex flex-col mb-8">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -755,6 +705,56 @@ function HomePage() {
               </div>
             )}
           </section>
+
+          {/* Your Registered Hackathons Section */}
+          <section className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">Your Registered Hackathons</h2>
+                <p className="text-gray-600 mt-2">Track your upcoming competitions and deadlines</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {loading ? (
+                Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
+              ) : registeredHackathons.length > 0 ? (
+                registeredHackathons.slice(0, 3).map((hackathon) => (
+                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
+                ))
+              ) : (
+                <EmptyState
+                  title="No Registered Hackathons"
+                  message="You haven't registered for any hackathons yet. Explore available hackathons above!"
+                />
+              )}
+            </div>
+          </section>
+
+          {/* Your Organized Hackathons Section */}
+          <section className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">Your Organized Hackathons</h2>
+                <p className="text-gray-600 mt-2">Manage and monitor your events</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {loading ? (
+                Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
+              ) : organizedHackathons.length > 0 ? (
+                organizedHackathons.slice(0, 3).map((hackathon) => (
+                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
+                ))
+              ) : (
+                <EmptyState
+                  title="No Organized Hackathons"
+                  message="You haven't organized any hackathons yet. Ready to create your first event?"
+                />
+              )}
+            </div>
+          </section>
         </div>
 
         {/* Stats Section */}
@@ -781,6 +781,6 @@ function HomePage() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

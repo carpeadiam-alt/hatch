@@ -214,7 +214,7 @@ const RegistrationPageContent = () => {
       
       alert('Registration submitted successfully!');
       reset();
-      setCurrentStep(1);
+      window.location.href = '/home';
       
     } catch (error) {
       console.error('Registration error:', error);

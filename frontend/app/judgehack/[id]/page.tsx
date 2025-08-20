@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Instrument_Sans } from 'next/font/google';
+import Navbar from '../../../components/navbar';
 
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
@@ -711,9 +712,11 @@ function ManageHackPageContent() {
   }
 
   return (
+    <>
+    <Navbar/>
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Manage Hackathon: {hackData.eventName}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Manage Hackathon: {hackData.eventName}</h1>
 
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 mb-6">
@@ -747,7 +750,7 @@ function ManageHackPageContent() {
 
         {activeTab === 'judging' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4">Judging</h2>
+            <h2 className="text-2xl text-gray-900 font-semibold mb-4">Judging</h2>
 
             {hackData.phases && hackData.phases.length > 0 ? (
               <>
@@ -1030,7 +1033,7 @@ function ManageHackPageContent() {
 
         {activeTab === 'leaderboard' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-4">Leaderboard</h2>
+            <h2 className="text-2xl text-gray-900 font-semibold mb-4">Leaderboard</h2>
 
             {/* Phase tabs for leaderboard */}
             <div className="border-b border-gray-200 mb-6">
@@ -1137,7 +1140,7 @@ function ManageHackPageContent() {
               return leaderboardData.length > 0 ? (
                 <div className="space-y-3">
                   <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium">
+                    <h3 className="text-lg text-gray-900 font-medium">
                       {activeLeaderboardPhase === 'overall' ? 'Overall Rankings' : `${activeLeaderboardPhase} Rankings`}
                     </h3>
                     <span className="text-sm text-gray-500">
@@ -1149,7 +1152,7 @@ function ManageHackPageContent() {
                     return (
                       <div
                         key={team.teamId}
-                        className={`border rounded-lg p-4 ${
+                        className={`border text-gray-900 rounded-lg p-4 ${
                           index === 0 ? 'border-yellow-400 bg-gradient-to-r from-yellow-50 to-yellow-100' :
                           index === 1 ? 'border-gray-400 bg-gradient-to-r from-gray-50 to-gray-100' :
                           index === 2 ? 'border-orange-400 bg-gradient-to-r from-orange-50 to-orange-100' :
@@ -1220,5 +1223,6 @@ function ManageHackPageContent() {
         )}
       </div>
     </div>
+    </>
   );
 }
