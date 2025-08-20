@@ -282,59 +282,74 @@ function HackathonSubmissionContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-xl font-semibold text-gray-300">Loading...</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="flex items-center space-x-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="text-xl text-gray-600">Loading...</div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-xl font-semibold text-red-400">{error}</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-xl text-red-600 mb-4">{error}</div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
 
   if (!hackathonData) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-xl font-semibold text-gray-300">Hackathon not found</div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-xl text-gray-600">Hackathon not found</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
+      <div className="border-b border-gray-200 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between">
+            <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-900">{hackathonData.eventName}</h1>
-              <p className="text-lg text-gray-700 mt-1">{hackathonData.eventTagline}</p>
-              <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-800">
-                <span>Mode: {hackathonData.mode}</span>
-                <span>Team Size: {hackathonData.teamSize}</span>
-                <span>Max Teams: {hackathonData.maxTeams}</span>
+              <p className="text-lg text-gray-600 mt-2">{hackathonData.eventTagline}</p>
+              <div className="flex flex-wrap gap-3 mt-4">
+                <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-md text-sm font-medium border border-blue-200">
+                  Mode: {hackathonData.mode}
+                </span>
+                <span className="bg-green-50 text-green-700 px-3 py-1 rounded-md text-sm font-medium border border-green-200">
+                  Team Size: {hackathonData.teamSize}
+                </span>
+                <span className="bg-gray-50 text-gray-700 px-3 py-1 rounded-md text-sm font-medium border border-gray-200">
+                  Max Teams: {hackathonData.maxTeams}
+                </span>
               </div>
             </div>
             {teamData && (
-              <div className={`mt-4 md:mt-0 rounded-lg p-4 ${
-                isTeamActive() ? 'bg-blue-50' : 'bg-red-50'
+              <div className={`mt-6 md:mt-0 p-4 rounded-lg border ${
+                isTeamActive() 
+                  ? 'bg-green-50 border-green-200' 
+                  : 'bg-red-50 border-red-200'
               }`}>
-                <h3 className={`font-semibold ${
-                  isTeamActive() ? 'text-blue-900' : 'text-red-900'
-                }`}>
+                <h3 className="font-semibold text-gray-900">
                   Team: {teamData.team.teamName}
                 </h3>
-                <p className={`text-sm ${
-                  isTeamActive() ? 'text-blue-700' : 'text-red-700'
-                }`}>
-                  Team ID: {teamData.team.teamId}
+                <p className="text-sm text-gray-600">
+                  ID: {teamData.team.teamId}
                 </p>
                 {!isTeamActive() && (
-                  <p className="text-sm text-red-700 font-medium mt-1">
+                  <p className="text-sm text-red-600 mt-1 font-medium">
                     Status: Inactive
                   </p>
                 )}
@@ -346,17 +361,17 @@ function HackathonSubmissionContent() {
 
       {/* Inactive Team Alert */}
       {teamData && !isTeamActive() && (
-        <div className="bg-red-900 border-b border-red-800">
+        <div className="bg-red-50 border-b border-red-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center space-x-3">
               <div className="flex-shrink-0">
-                <svg className="h-6 w-6 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-red-100">Team Inactive</h3>
-                <p className="text-red-200">You are not part of this hackathon anymore. Submissions are not allowed.</p>
+                <h3 className="text-sm font-medium text-red-800">Team Inactive</h3>
+                <p className="text-sm text-red-700">You are not part of this hackathon anymore. Submissions are not allowed.</p>
               </div>
             </div>
           </div>
@@ -367,33 +382,33 @@ function HackathonSubmissionContent() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4 text-gray-900">Event Details</h3>
-              <div className="space-y-3 text-sm">
+            <div className="bg-white border border-gray-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Event Details</h3>
+              <div className="space-y-4">
                 <div>
-                  <span className="font-medium text-gray-800">Start:</span>
-                  <p className="text-gray-700">{formatDate(hackathonData.eventStartDate)}</p>
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Start Date</span>
+                  <p className="text-sm text-gray-900 mt-1">{formatDate(hackathonData.eventStartDate)}</p>
                 </div>
                 <div>
-                  <span className="font-medium text-gray-800">End:</span>
-                  <p className="text-gray-700">{formatDate(hackathonData.eventEndDate)}</p>
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">End Date</span>
+                  <p className="text-sm text-gray-900 mt-1">{formatDate(hackathonData.eventEndDate)}</p>
                 </div>
                 {hackathonData.hasFee && (
                   <div>
-                    <span className="font-medium text-gray-800">Fee:</span>
-                    <p className="text-gray-700">₹{hackathonData.fee}</p>
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Entry Fee</span>
+                    <p className="text-lg font-semibold text-gray-900 mt-1">₹{hackathonData.fee}</p>
                   </div>
                 )}
               </div>
 
               {hackathonData.prizes.length > 0 && (
                 <div className="mt-6">
-                  <h4 className="font-semibold mb-3 text-gray-900">Prizes</h4>
-                  <div className="space-y-2">
+                  <h4 className="text-md font-semibold text-gray-900 mb-3">🏆 Prizes</h4>
+                  <div className="space-y-3">
                     {hackathonData.prizes.map((prize, index) => (
-                      <div key={index} className="bg-yellow-50 rounded p-3">
-                        <div className="font-medium text-yellow-800">{prize.title}</div>
-                        <div className="text-sm text-yellow-700">{prize.description}</div>
+                      <div key={index} className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <div className="text-sm font-medium text-gray-900">{prize.title}</div>
+                        <div className="text-sm text-gray-600 mt-1">{prize.description}</div>
                       </div>
                     ))}
                   </div>
@@ -402,10 +417,12 @@ function HackathonSubmissionContent() {
 
               {hackathonData.sponsors.length > 0 && (
                 <div className="mt-6">
-                  <h4 className="font-semibold mb-3 text-gray-900">Sponsors</h4>
-                  <div className="space-y-1">
+                  <h4 className="text-md font-semibold text-gray-900 mb-3">🤝 Sponsors</h4>
+                  <div className="space-y-2">
                     {hackathonData.sponsors.map((sponsor, index) => (
-                      <div key={index} className="text-sm text-gray-700">{sponsor.name}</div>
+                      <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-2 text-sm text-gray-700">
+                        {sponsor.name}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -416,9 +433,9 @@ function HackathonSubmissionContent() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Phase Tabs */}
-            <div className="bg-white rounded-lg shadow mb-6">
+            <div className="bg-white border border-gray-200 rounded-lg mb-6">
               <div className="border-b border-gray-200">
-                <nav className="flex space-x-8 px-6" aria-label="Phases">
+                <nav className="flex space-x-1 p-1" aria-label="Phases">
                   {hackathonData.phases.map((phase, index) => {
                     const status = getPhaseStatus(phase);
                     const isActive = activePhase === index;
@@ -428,17 +445,17 @@ function HackathonSubmissionContent() {
                       <button
                         key={index}
                         onClick={() => setActivePhase(index)}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                        className={`py-2 px-4 text-sm font-medium rounded-md whitespace-nowrap ${
                           isActive
-                            ? 'border-blue-500 text-blue-600'
-                            : 'border-transparent text-gray-700 hover:text-gray-900 hover:border-gray-300'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                         }`}
                       >
                         <div className="flex items-center space-x-2">
                           <span>{phase.name}</span>
                           <div className="flex space-x-1">
                             <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                 status === 'completed'
                                   ? 'bg-green-100 text-green-800'
                                   : status === 'active'
@@ -446,11 +463,11 @@ function HackathonSubmissionContent() {
                                   : 'bg-gray-100 text-gray-800'
                               }`}
                             >
-                              {status}
+                              {status.toUpperCase()}
                             </span>
                             {hasSubmission && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                                ✓ Submitted
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                ✓
                               </span>
                             )}
                           </div>
@@ -462,125 +479,145 @@ function HackathonSubmissionContent() {
               </div>
 
               {/* Phase Content */}
-              <div className="p-6 bg-gray-800">
+              <div className="p-6">
                 {hackathonData.phases.map((phase, index) => (
                   <div key={index} className={activePhase === index ? 'block' : 'hidden'}>
                     <div className="mb-6">
-                      <h2 className="text-xl font-bold text-white mb-2">{phase.name}</h2>
-                      <p className="text-gray-300 mb-4">{phase.description}</p>
-                      <div className="flex flex-col sm:flex-row sm:space-x-6 text-sm text-gray-400">
-                        <span>Start: {formatDate(phase.startDate)}</span>
-                        <span>End: {formatDate(phase.endDate)}</span>
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2">{phase.name}</h2>
+                      <p className="text-gray-600 mb-4">{phase.description}</p>
+                      <div className="flex flex-col sm:flex-row sm:space-x-4 text-sm text-gray-600">
+                        <span>📅 Start: {formatDate(phase.startDate)}</span>
+                        <span>⏰ End: {formatDate(phase.endDate)}</span>
                       </div>
                     </div>
 
                     {/* Team Inactive Warning */}
                     {teamData && !isTeamActive() && (
-                      <div className="mb-6 bg-red-900 border border-red-700 rounded-lg p-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">!</span>
+                      <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-center space-x-3">
+                          <svg className="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-red-800">
+                              You are not part of this hackathon anymore
+                            </p>
+                            <p className="text-sm text-red-700">
+                              Your team status is inactive. Submissions are not allowed.
+                            </p>
                           </div>
-                          <p className="text-red-200 font-medium">
-                            You are not part of this hackathon anymore
-                          </p>
                         </div>
-                        <p className="text-red-300 text-sm mt-1">
-                          Your team status is inactive. Submissions are not allowed.
-                        </p>
                       </div>
                     )}
 
                     {/* Submission Status Indicator */}
                     {hasSubmissionForPhase(index) && (
-                      <div className="mb-6 bg-emerald-900 border border-emerald-700 rounded-lg p-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">✓</span>
+                      <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center space-x-3">
+                          <svg className="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          <div>
+                            <p className="text-sm font-medium text-green-800">
+                              Submission Complete!
+                            </p>
+                            {isTeamActive() && (
+                              <p className="text-sm text-green-700">
+                                You can update your submission below if the phase is still active.
+                              </p>
+                            )}
                           </div>
-                          <p className="text-emerald-200 font-medium">
-                            Submission already made for this phase
-                          </p>
                         </div>
-                        {isTeamActive() && (
-                          <p className="text-emerald-300 text-sm mt-1">
-                            You can update your submission below if the phase is still active.
-                          </p>
-                        )}
                       </div>
                     )}
 
                     {getPhaseStatus(phase) === 'active' && teamData && isTeamActive() ? (
                       <div className="space-y-6">
-                        <h3 className="text-lg font-semibold text-white">Submit Deliverables</h3>
-                        {phase.deliverables.map((deliverable, deliverableIndex) => (
-                          <div key={deliverableIndex} className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                            <label className="block text-sm font-medium text-gray-200 mb-2">
-                              {deliverable.type.charAt(0).toUpperCase() + deliverable.type.slice(1)}
-                            </label>
-                            <p className="text-sm text-gray-300 mb-3">{deliverable.description}</p>
-                            <input
-                              type="text"
-                              placeholder={`Enter ${deliverable.type} link/details`}
-                              value={submissions[deliverable.type] || ''}
-                              onChange={(e) => handleSubmissionChange(deliverable.type, e.target.value)}
-                              className="w-full px-3 py-2 border border-gray-500 rounded-md shadow-sm bg-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            />
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">📤 Submit Your Work</h3>
+                          <div className="space-y-4">
+                            {phase.deliverables.map((deliverable, deliverableIndex) => (
+                              <div key={deliverableIndex} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <label className="block text-sm font-medium text-gray-900 mb-2">
+                                  {deliverable.type.charAt(0).toUpperCase() + deliverable.type.slice(1)}
+                                </label>
+                                <p className="text-sm text-gray-900 mb-3">{deliverable.description}</p>
+                                <input
+                                  type="text"
+                                  placeholder={`Enter ${deliverable.type} link/details`}
+                                  value={submissions[deliverable.type] || ''}
+                                  onChange={(e) => handleSubmissionChange(deliverable.type, e.target.value)}
+                                  className="w-full px-3 py-2 border border-gray-900 text-gray-900 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                />
+
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
                         
-                        <button
-                          onClick={handleSubmit}
-                          disabled={submitting || Object.keys(submissions).length === 0}
-                          className="w-full sm:w-auto bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {submitting ? 'Submitting...' : hasSubmissionForPhase(index) ? 'Update Submission' : 'Submit Deliverables'}
-                        </button>
+                        <div className="flex justify-center">
+                          <button
+                            onClick={handleSubmit}
+                            disabled={submitting || Object.keys(submissions).length === 0}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {submitting ? (
+                              <div className="flex items-center space-x-2">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                <span>Submitting...</span>
+                              </div>
+                            ) : hasSubmissionForPhase(index) ? 'Update Submission' : 'Submit'}
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-white">Required Deliverables</h3>
-                        {phase.deliverables.map((deliverable, deliverableIndex) => {
-                          const submissionData = getSubmissionForPhase(index);
-                          const submittedValue = submissionData?.submissions?.[deliverable.type];
-                          
-                          return (
-                            <div key={deliverableIndex} className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                              <div className="font-medium text-gray-200">
-                                {deliverable.type.charAt(0).toUpperCase() + deliverable.type.slice(1)}
-                              </div>
-                              <div className="text-sm text-gray-300 mt-1">{deliverable.description}</div>
-                              {submittedValue && (
-                                <div className="mt-3 p-3 bg-gray-600 rounded border-l-4 border-emerald-500">
-                                  <div className="text-xs text-emerald-400 font-medium mb-1">Your Submission:</div>
-                                  <div className="text-sm text-gray-200 break-all">{submittedValue}</div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-4">📋 Required Deliverables</h3>
+                          <div className="space-y-4">
+                            {phase.deliverables.map((deliverable, deliverableIndex) => {
+                              const submissionData = getSubmissionForPhase(index);
+                              const submittedValue = submissionData?.submissions?.[deliverable.type];
+                              
+                              return (
+                                <div key={deliverableIndex} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                  <div className="text-sm font-medium text-gray-900 mb-1">
+                                    {deliverable.type.charAt(0).toUpperCase() + deliverable.type.slice(1)}
+                                  </div>
+                                  <div className="text-sm text-gray-600 mb-3">{deliverable.description}</div>
+                                  {submittedValue && (
+                                    <div className="mt-3 p-3 bg-white border-l-4 border-green-500 rounded">
+                                      <div className="text-xs font-medium text-green-600 mb-1 uppercase tracking-wider">✅ Your Submission:</div>
+                                      <div className="text-sm text-gray-900 break-all">{submittedValue}</div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
-                          );
-                        })}
+                              );
+                            })}
+                          </div>
+                        </div>
                         
                         {getPhaseStatus(phase) === 'upcoming' && (
-                          <div className="bg-yellow-900 border border-yellow-700 rounded-lg p-4">
-                            <p className="text-yellow-200">This phase hasn't started yet. Submissions will be available when the phase begins.</p>
+                          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                            <p className="text-sm text-yellow-800">⏳ Phase hasn't started yet. Come back when it begins!</p>
                           </div>
                         )}
                         
                         {getPhaseStatus(phase) === 'completed' && (
-                          <div className="bg-gray-700 border border-gray-600 rounded-lg p-4">
-                            <p className="text-gray-300">This phase has ended. No more submissions are accepted.</p>
+                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                            <p className="text-sm text-gray-600">🔒 This phase has ended. No more submissions accepted.</p>
                           </div>
                         )}
 
                         {!teamData && (
-                          <div className="bg-red-900 border border-red-700 rounded-lg p-4">
-                            <p className="text-red-200">You need to be part of a team to submit deliverables.</p>
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p className="text-sm text-red-800">👥 Join a team first to submit deliverables!</p>
                           </div>
                         )}
 
                         {teamData && !isTeamActive() && (
-                          <div className="bg-red-900 border border-red-700 rounded-lg p-4">
-                            <p className="text-red-200">You are not part of this hackathon anymore. Submissions are not allowed.</p>
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <p className="text-sm text-red-800">❌ Team inactive. Submissions not allowed.</p>
                           </div>
                         )}
                       </div>
