@@ -42,9 +42,18 @@ The backend is hosted on **Azure App Services**, with **Azure PostgreSQL** as th
 ```mermaid
 %%{init: {'theme':'dark'}}%%
 flowchart TD
-    A[User] -->|OAuth Login (Google/GitHub)| B[Next.js Frontend]
-    B -->|API Requests| C[Flask Backend - Azure]
-    C -->|Relational Data| D[(Azure PostgreSQL)]
-    C -->|Event Details| E[(MongoDB Atlas)]
-    B -->|Deployed on| F[Vercel Hosting]
-    C -->|Deployed on| G[Azure App Services]
+    A[👤 User] -->|OAuth Login| B[🌐 Next.js Frontend]
+    B -->|API Requests| C[⚡ Flask Backend]
+    C -->|User Data| D[(🐘 Azure PostgreSQL)]
+    C -->|Event Data| E[(🍃 MongoDB Atlas)]
+    
+    B -.->|Hosted on| F[📦 Vercel]
+    C -.->|Deployed on| G[☁️ Azure App Services]
+    
+    H[🔐 OAuth Providers] -->|Google & GitHub| B
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#e8f5e8
+    style D fill:#fff3e0
+    style E fill:#e0f2f1
