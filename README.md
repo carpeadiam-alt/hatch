@@ -1,54 +1,39 @@
-# 🐣 Hatch – Event & Hackathon Hosting Platform
+# Hatch
 
-**Theme:** SynapHack 3.0 – Event & Hackathon Hosting Platform  
-**Goal:** Empower organizers, participants, and judges with smooth workflows, real-time engagement, and end-to-end event lifecycle management.
-
----
-
-## 🚀 Introduction
-
-Hackathons and events are the backbone of innovation, collaboration, and learning.  
-Most existing solutions are either **complex, expensive, or inflexible**.  
-
-**Hatch** solves this by providing a **modern, scalable, and user-friendly event hosting platform** that supports:
-- Event creation & management
-- Participant & team registration
-- Project submission & evaluation
-- Real-time communication & announcements
-- Automated certificates & dashboards
+Hatch is a web platform with a **Next.js frontend** and a **Flask backend**, designed for event management and user interactions.  
+The backend is hosted on **Azure App Services**, with **Azure PostgreSQL** as the relational database, and **MongoDB Atlas** for storing event details.  
 
 ---
 
-## 📌 Features
-
-### ✅ Core Features
-- **Event Creation & Management** – Organizers can configure theme, tracks, rules, timeline, prizes, and sponsors; supports online/offline.
-- **Registration & Teaming** – Individual/team registration with secure login (Google + GitHub via Firebase).
-- **Project Submission & Evaluation** – Upload documentation, GitHub links, and videos. Judges can review, score, and give feedback across multiple rounds.
-- **Communication & Updates** – Real-time announcements and reminders via polling.
-- **Role-based Dashboards**:
-  - Participants → manage teams & submissions.
-  - Organizers → manage events, announcements, and results.
-  - Judges → review & score projects.
-  - A user can act as both participant and organizer seamlessly.
-
-### 🎁 Additional Features
-- **AI-powered plagiarism detection** – validate originality of submissions.  
-- **Automated certificate generation** – emailed to participants and winners after results.  
-- **Real-time dashboards & analytics** – monitor event progress, scoring, and participation.  
-- **Sponsor & Partner showcase** – highlight event partners.  
-- **Integrated leaderboard** – live ranking of teams/projects.  
+## 🚀 Features (Implemented)
+- **Frontend (Next.js)**
+  - Modern UI for user interaction.
+  - Integration with backend APIs.
+- **Backend (Flask)**
+  - REST API endpoints for authentication, event handling, and data persistence.
+  - OAuth authentication with **Google** and **GitHub**.
+- **Databases**
+  - **Azure PostgreSQL** → Stores user authentication and relational data.
+  - **MongoDB Atlas** → Stores event-related details and flexible data structures.
+- **Hosting**
+  - **Frontend** → Vercel (Next.js hosting).
+  - **Backend** → Azure App Services.
+  - **Databases** → Azure PostgreSQL + MongoDB Atlas.
 
 ---
 
-## ⚙️ Tech Stack
+## 🛠️ Tech Stack
+- **Frontend:** Next.js, React, TailwindCSS
+- **Backend:** Flask (Python)
+- **Databases:** Azure PostgreSQL, MongoDB Atlas
+- **Auth:** OAuth (Google + GitHub)
+- **Hosting:** Vercel (Frontend), Azure (Backend)
 
-- **Frontend:** Next.js (TypeScript), hosted on **Vercel**  
-- **Backend:** Flask (Python), hosted on **Azure Web App**  
-- **Databases:**
-  - **Azure PostgreSQL** → structured storage (users, teams, auth, registrations).
-  - **MongoDB Atlas** → unstructured storage (submissions, announcements, chats).  
-- **Authentication:** Firebase OAuth (Google + GitHub)
+---
+
+## 📂 Repositories
+- [Frontend (hatch)](https://github.com/carpeadiam-alt/hatch.git)
+- [Backend (hatchBackend)](https://github.com/carpeadiam/hatchBackend)
 
 ---
 
@@ -57,12 +42,9 @@ Most existing solutions are either **complex, expensive, or inflexible**.
 ```mermaid
 %%{init: {'theme':'dark'}}%%
 flowchart TD
-    A[User] -->|OAuth (Google/GitHub)| B[Firebase Auth]
-    A -->|Frontend Requests| C[Next.js Frontend (Vercel)]
-    C -->|API Calls| D[Flask Backend (Azure Web App)]
-    D -->|Structured Data| E[(Azure PostgreSQL)]
-    D -->|Unstructured Data| F[(MongoDB Atlas)]
-    D -->|Plagiarism Check| G[AI Service - plagiarism_checker.py]
-    D -->|Certificate Generation| H[Certificate Engine - certificate.html]
-    H -->|Email Delivery| A
-    D -->|Results & Leaderboard| C
+    A[User] -->|OAuth Login (Google/GitHub)| B[Next.js Frontend]
+    B -->|API Requests| C[Flask Backend - Azure]
+    C -->|Relational Data| D[(Azure PostgreSQL)]
+    C -->|Event Details| E[(MongoDB Atlas)]
+    B -->|Deployed on| F[Vercel Hosting]
+    C -->|Deployed on| G[Azure App Services]
