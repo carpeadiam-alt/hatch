@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Instrument_Sans } from 'next/font/google';
 
-
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
   display: 'swap',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from "next/link";
 import Navbar from '../../../components/navbar';
 
@@ -113,6 +113,23 @@ interface TeamDetails {
   teamLeader: TeamMember;
   teamMembers: TeamMember[];
   teamName: string;
+}
+
+// Back Button Component
+function BackButton() {
+  const router = useRouter();
+  
+  return (
+    <button
+      onClick={() => router.back()}
+      className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors duration-200 mb-6"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+      </svg>
+      <span className="font-medium">Back</span>
+    </button>
+  );
 }
 
 // Leaderboard Component
@@ -580,31 +597,31 @@ function ActionButton({ data }: { data: HackathonData }) {
   }
 
   // Already registered - show team details
-if (registrationStatus === 'yes' && teamDetails && userEmail) {
-  return (
-    <>
-      <button 
-        onClick={() => setShowTeamPopup(true)}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
-      >
-        View Team Details
-      </button>
-      <Link href={`/arena/${hackCode}`}>
-        <button className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
-          Go to Submission
+  if (registrationStatus === 'yes' && teamDetails && userEmail) {
+    return (
+      <>
+        <button 
+          onClick={() => setShowTeamPopup(true)}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+        >
+          View Team Details
         </button>
-      </Link>
-      {showTeamPopup && (
-        <TeamDetailsPopup 
-          teamDetails={teamDetails} 
-          userEmail={userEmail}
-          onClose={() => setShowTeamPopup(false)}
-          onLeaveTeam={handleLeaveTeam}
-        />
-      )}
-    </>
-  );
-}
+        <Link href={`/arena/${hackCode}`}>
+          <button className="w-full mt-3 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
+            Go to Submission
+          </button>
+        </Link>
+        {showTeamPopup && (
+          <TeamDetailsPopup 
+            teamDetails={teamDetails} 
+            userEmail={userEmail}
+            onClose={() => setShowTeamPopup(false)}
+            onLeaveTeam={handleLeaveTeam}
+          />
+        )}
+      </>
+    );
+  }
 
   // Can register
   if (canRegister && registrationStatus === 'no') {
@@ -705,6 +722,8 @@ export default function HackathonPage() {
     <Navbar />
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
+        <BackButton />
+        
         {/* Banner Image */}
         <div className="mb-6 rounded-xl overflow-hidden shadow-sm">
           <img 
@@ -749,14 +768,17 @@ export default function HackathonPage() {
           <HackathonStatusCard data={hackData} />
         </div>
 
-        {/* Main Content Grid */}
+        {/* Main Content Grid - Reordered Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Leaderboard Section - Only show if results are available */}
-            {hackData.results && (
-              <LeaderboardSection results={hackData.results} />
-            )}
+            {/* Description */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">About</h2>
+              <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                {hackData.eventDescription}
+              </div>
+            </div>
 
             {/* Announcements */}
             {hackData.announcements && hackData.announcements.filter(announcement => {
@@ -798,70 +820,9 @@ export default function HackathonPage() {
               </div>
             )}
 
-            {/* Description */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">About</h2>
-              <p className="text-gray-700 leading-relaxed">{hackData.eventDescription}</p>
-            </div>
-
-            {/* Phases */}
-            {hackData.phases && hackData.phases.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Competition Phases</h2>
-                <div className="space-y-4">
-                  {hackData.phases.map((phase, index) => (
-                    <div key={index} className="border-l-4 border-[#008622] pl-4 py-2">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">{phase.name}</h3>
-                      <p className="text-gray-700 mb-3">{phase.description}</p>
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-                        <span><strong>Start:</strong> {formatDate(phase.startDate)}</span>
-                        <span><strong>End:</strong> {formatDate(phase.endDate)}</span>
-                      </div>
-                      {phase.deliverables && phase.deliverables.length > 0 && (
-                        <div>
-                          <h4 className="font-medium text-gray-900 mb-2">Deliverables:</h4>
-                          <ul className="list-disc list-inside space-y-1">
-                            {phase.deliverables.map((deliverable, idx) => (
-                              <li key={idx} className="text-gray-700">
-                                <span className="font-medium capitalize">{deliverable.type}:</span> {deliverable.description}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Prizes */}
-            {hackData.prizes && hackData.prizes.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Prizes & Rewards</h2>
-                <div className="grid gap-4">
-                  {hackData.prizes.map((prize, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{prize.title}</h3>
-                      <p className="text-gray-700">{prize.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Sponsors */}
-            {hackData.sponsors && hackData.sponsors.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Sponsors</h2>
-                <div className="flex flex-wrap gap-3">
-                  {hackData.sponsors.map((sponsor, index) => (
-                    <span key={index} className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg font-medium">
-                      {sponsor.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            {/* Leaderboard Section - Moved higher in priority */}
+            {hackData.results && (
+              <LeaderboardSection results={hackData.results} />
             )}
           </div>
 
@@ -939,6 +900,72 @@ export default function HackathonPage() {
                       {organiser.email && <p className="text-sm text-gray-600">{organiser.email}</p>}
                       {organiser.phone && <p className="text-sm text-gray-600">{organiser.phone}</p>}
                     </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Full Width Sections Below */}
+        <div className="mt-6 space-y-6">
+          {/* Phases */}
+          {hackData.phases && hackData.phases.length > 0 && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Competition Phases</h2>
+              <div className="space-y-4">
+                {hackData.phases.map((phase, index) => (
+                  <div key={index} className="border-l-4 border-[#008622] pl-4 py-2">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{phase.name}</h3>
+                    <p className="text-gray-700 mb-3">{phase.description}</p>
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
+                      <span><strong>Start:</strong> {formatDate(phase.startDate)}</span>
+                      <span><strong>End:</strong> {formatDate(phase.endDate)}</span>
+                    </div>
+                    {phase.deliverables && phase.deliverables.length > 0 && (
+                      <div>
+                        <h4 className="font-medium text-gray-900 mb-2">Deliverables:</h4>
+                        <ul className="list-disc list-inside space-y-1">
+                          {phase.deliverables.map((deliverable, idx) => (
+                            <li key={idx} className="text-gray-700">
+                              <span className="font-medium capitalize">{deliverable.type}:</span> {deliverable.description}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Prizes and Sponsors Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Prizes */}
+            {hackData.prizes && hackData.prizes.length > 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Prizes & Rewards</h2>
+                <div className="grid gap-4">
+                  {hackData.prizes.map((prize, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{prize.title}</h3>
+                      <p className="text-gray-700">{prize.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sponsors */}
+            {hackData.sponsors && hackData.sponsors.length > 0 && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">Sponsors</h2>
+                <div className="flex flex-wrap gap-3">
+                  {hackData.sponsors.map((sponsor, index) => (
+                    <span key={index} className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg font-medium">
+                      {sponsor.name}
+                    </span>
                   ))}
                 </div>
               </div>

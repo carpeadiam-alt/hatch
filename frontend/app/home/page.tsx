@@ -320,12 +320,41 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [userEmail, setUserEmail] = useState<string>('');
+  const [showAllDiscovered, setShowAllDiscovered] = useState(false);
+  const [showAllRegistered, setShowAllRegistered] = useState(false);
+  const [showAllOrganized, setShowAllOrganized] = useState(false);
   const [filters, setFilters] = useState({
     mode: '',
     hasFee: '',
     teamSize: '',
     eventType: ''
   });
+
+  // Function to sort hackathons by registration end date (nearest first, expired last)
+  const sortHackathonsByRegistrationDate = (hackathons: Hackathon[]): Hackathon[] => {
+    const now = new Date();
+    
+    return [...hackathons].sort((a, b) => {
+      const aEndDate = new Date(a.registrationEndDate);
+      const bEndDate = new Date(b.registrationEndDate);
+      
+      const aIsExpired = aEndDate < now;
+      const bIsExpired = bEndDate < now;
+      
+      // If one is expired and other is not, non-expired comes first
+      if (aIsExpired && !bIsExpired) return 1;
+      if (!aIsExpired && bIsExpired) return -1;
+      
+      // If both are expired or both are active, sort by date
+      // For active: nearest end date first (ascending)
+      // For expired: most recently expired first (descending)
+      if (!aIsExpired && !bIsExpired) {
+        return aEndDate.getTime() - bEndDate.getTime();
+      } else {
+        return bEndDate.getTime() - aEndDate.getTime();
+      }
+    });
+  };
 
   // Get user email from localStorage
   useEffect(() => {
@@ -387,8 +416,9 @@ function HomePage() {
       }
     });
 
-    setRegisteredHackathons(registered);
-    setOrganizedHackathons(organized);
+    // Sort the categorized hackathons by registration date
+    setRegisteredHackathons(sortHackathonsByRegistrationDate(registered));
+    setOrganizedHackathons(sortHackathonsByRegistrationDate(organized));
   };
 
   const filterHackathons = () => {
@@ -426,7 +456,8 @@ function HomePage() {
       filtered = filtered.filter(hackathon => hackathon.eventType === filters.eventType);
     }
 
-    setFilteredHackathons(filtered);
+    // Sort filtered hackathons by registration date
+    setFilteredHackathons(sortHackathonsByRegistrationDate(filtered));
   };
 
   const clearFilters = () => {
@@ -455,8 +486,11 @@ function HomePage() {
       
       const data = await response.json();
       console.log('Fetched hackathons:', data);
-      setAllHackathons(data);
-      setFilteredHackathons(data);
+      
+      // Sort all hackathons by registration date before setting state
+      const sortedHackathons = sortHackathonsByRegistrationDate(data);
+      setAllHackathons(sortedHackathons);
+      setFilteredHackathons(sortedHackathons);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -543,6 +577,17 @@ function HomePage() {
                   <h2 className="text-3xl font-bold text-gray-900">Discover Hackathons</h2>
                   <p className="text-gray-600 mt-2">Find your next coding adventure</p>
                 </div>
+                {(searchQuery || getActiveFilterCount() > 0 ? filteredHackathons : allHackathons).length > 6 && (
+                  <button
+                    onClick={() => setShowAllDiscovered(!showAllDiscovered)}
+                    className="text-[#008622] hover:text-[#007020] font-medium text-sm flex items-center"
+                  >
+                    {showAllDiscovered ? 'Show Less' : 'Show All'}
+                    <svg className={`ml-1 w-4 h-4 transition-transform ${showAllDiscovered ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
               </div>
 
               {/* Compact Search and Filter Section */}
@@ -699,9 +744,11 @@ function HomePage() {
               />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {(searchQuery || getActiveFilterCount() > 0 ? filteredHackathons : allHackathons).slice(0, 6).map((hackathon) => (
-                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} />
-                ))}
+                {(searchQuery || getActiveFilterCount() > 0 ? filteredHackathons : allHackathons)
+                  .slice(0, showAllDiscovered ? undefined : 6)
+                  .map((hackathon) => (
+                    <HackathonCard key={hackathon.hackCode} hackathon={hackathon} />
+                  ))}
               </div>
             )}
           </section>
@@ -713,15 +760,28 @@ function HomePage() {
                 <h2 className="text-3xl font-bold text-gray-900">Your Registered Hackathons</h2>
                 <p className="text-gray-600 mt-2">Track your upcoming competitions and deadlines</p>
               </div>
+              {registeredHackathons.length > 3 && (
+                <button
+                  onClick={() => setShowAllRegistered(!showAllRegistered)}
+                  className="text-[#008622] hover:text-[#007020] font-medium text-sm flex items-center"
+                >
+                  {showAllRegistered ? 'Show Less' : 'Show All'}
+                  <svg className={`ml-1 w-4 h-4 transition-transform ${showAllRegistered ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading ? (
                 Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
               ) : registeredHackathons.length > 0 ? (
-                registeredHackathons.slice(0, 3).map((hackathon) => (
-                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
-                ))
+                registeredHackathons
+                  .slice(0, showAllRegistered ? undefined : 3)
+                  .map((hackathon) => (
+                    <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
+                  ))
               ) : (
                 <EmptyState
                   title="No Registered Hackathons"
@@ -738,15 +798,28 @@ function HomePage() {
                 <h2 className="text-3xl font-bold text-gray-900">Your Organized Hackathons</h2>
                 <p className="text-gray-600 mt-2">Manage and monitor your events</p>
               </div>
+              {organizedHackathons.length > 3 && (
+                <button
+                  onClick={() => setShowAllOrganized(!showAllOrganized)}
+                  className="text-[#008622] hover:text-[#007020] font-medium text-sm flex items-center"
+                >
+                  {showAllOrganized ? 'Show Less' : 'Show All'}
+                  <svg className={`ml-1 w-4 h-4 transition-transform ${showAllOrganized ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {loading ? (
                 Array.from({ length: 3 }, (_, i) => <LoadingSkeleton key={i} />)
               ) : organizedHackathons.length > 0 ? (
-                organizedHackathons.slice(0, 3).map((hackathon) => (
-                  <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
-                ))
+                organizedHackathons
+                  .slice(0, showAllOrganized ? undefined : 3)
+                  .map((hackathon) => (
+                    <HackathonCard key={hackathon.hackCode} hackathon={hackathon} showRegisterButton={false} />
+                  ))
               ) : (
                 <EmptyState
                   title="No Organized Hackathons"
